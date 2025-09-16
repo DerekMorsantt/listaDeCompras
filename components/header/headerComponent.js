@@ -4,7 +4,7 @@ export function header(){
     header.className = "header";
 
     let img = document.createElement('img')
-    img.src = "../../assets/download.png"
+    img.src = "assets/download.png"
     header.appendChild(img)
     img.className = "img";
     

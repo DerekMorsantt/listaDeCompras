@@ -2,10 +2,9 @@
     display: flex;
     justify-content: flex-end; 
     align-items: flex-end;     
-    border: 1px solid black;
 }
 
 .header img {
-    margin: 1rem;
+    margin: 2rem 1rem;
     width: 45px;
 }
