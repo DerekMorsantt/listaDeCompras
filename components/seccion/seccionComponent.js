@@ -1,4 +1,5 @@
 import { guardarProducto, obtenerProductos } from "../../control/localStorage.js";
+
 export function crearSeccionCompras() {
     let seccionCompras = document.createElement('section');
     seccionCompras.className = "seccion-compras";
@@ -21,16 +22,16 @@ export function crearSeccionCompras() {
     let cajaEditable = document.createElement('div');
     cajaEditable.className = "caja-editable";
 
-    let campoNombre = document.createElement('div');
+    let campoNombre = document.createElement('input');
+    campoNombre.type = "text";
     campoNombre.className = "campo-nombre";
-    campoNombre.setAttribute("contentEditable", "true");
-    campoNombre.innerText = "Nombre del producto";
+    campoNombre.placeholder = "Nombre del producto";
     cajaEditable.appendChild(campoNombre);
 
-    let campoPrecio = document.createElement('div');
+    let campoPrecio = document.createElement('input');
+    campoPrecio.type = "text";
     campoPrecio.className = "campo-precio";
-    campoPrecio.setAttribute("contentEditable", "true");
-    campoPrecio.innerText = "Precio o cantidad";
+    campoPrecio.placeholder = "Precio";
     cajaEditable.appendChild(campoPrecio);
 
     let btnAñadir = document.createElement('button');
@@ -44,22 +45,59 @@ export function crearSeccionCompras() {
     listaProductos.className = "contenedor-productos";
     seccionCompras.appendChild(listaProductos);
 
+    function actualizarTotal() {
+        let carrito = obtenerProductos();
+        let total = carrito.reduce((acum, item) => acum + (parseFloat(item.precio) || 0), 0);
+        totalGeneral.innerText = `Q. ${total.toFixed(2)}`;
+    }
+
+    function renderizarProductos() {
+        let carrito = obtenerProductos();
+        listaProductos.innerHTML = "";
+
+        carrito.forEach((item, index) => {
+            let producto = document.createElement('div');
+            producto.className = "producto-item";
+
+            let texto = document.createElement('span');
+            texto.innerText = `${item.nombre} - Q. ${item.precio}`;
+
+            let btnEliminar = document.createElement('button');
+            btnEliminar.innerText = "❌";
+            btnEliminar.className = "btn-eliminar";
+
+            btnEliminar.addEventListener('click', () => {
+                let carritoActual = obtenerProductos();
+                carritoActual.splice(index, 1); 
+                guardarProducto(carritoActual); 
+                renderizarProductos();
+            });
+
+            producto.appendChild(texto);
+            producto.appendChild(btnEliminar);
+            listaProductos.appendChild(producto);
+        });
+
+        actualizarTotal();
+    }
+
     btnAñadir.addEventListener('click', () => {
-        let nombreProducto = campoNombre.innerText.trim(); 
-        let precioProducto = campoPrecio.innerText.trim();
+        let nombreProducto = campoNombre.value.trim();
+        let precioProducto = campoPrecio.value.trim();
 
         if (!nombreProducto || !precioProducto) return;
 
-        let producto = document.createElement('div');
-        producto.className = "producto-item";
-        producto.innerText = `${nombreProducto} - Q. ${precioProducto}`;
-        listaProductos.appendChild(producto);
-
- 
         let carritoGuardado = obtenerProductos();
-        carritoGuardado.push({ nombre: nombreProducto, precio: precioProducto });
+        carritoGuardado.push({ nombre: nombreProducto, precio: parseFloat(precioProducto) });
         guardarProducto(carritoGuardado);
+
+        campoNombre.value = "";
+        campoPrecio.value = "";
+
+        renderizarProductos();
     });
+
+    renderizarProductos();
 
     return seccionCompras;
 }

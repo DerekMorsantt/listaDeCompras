@@ -100,3 +100,12 @@
 .producto-item:hover {
   background: #cbd5e1;
 }
+
+.btn-eliminar {
+    color: rgb(255, 0, 0);
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    border: none;
+}

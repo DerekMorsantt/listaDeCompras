@@ -8,7 +8,6 @@ function main() {
     section.id = "todo";
 
     section.appendChild(header());
-
     section.appendChild(crearSeccionCompras());
 
     return section;
@@ -16,8 +15,23 @@ function main() {
 
 document.body.appendChild(main());
 
-document.addEventListener("click", e => {
-    if (e.target.id === "btnDownload") {
-        downloadAsImage();
-    }
+document.querySelector("#btnDownload").addEventListener("click", () => {
+
+    document.querySelector(".encabezado-compras").classList.add("ocultar");
+    document.querySelector(".monto-total").classList.add("ocultar");
+    document.querySelector(".caja-editable").classList.add("ocultar");
+    document.querySelector("header").classList.add("ocultar");
+
+    downloadAsImage();
+
+    document.querySelector(".subtitulo-lista").classList.remove("ocultar");
+    document.querySelector(".contenedor-productos").classList.remove("ocultar");
+       
+    document.querySelector(".encabezado-compras").classList.add("mostrar");
+    document.querySelector(".monto-total").classList.add("mostrar");
+    document.querySelector(".caja-editable").classList.add("mostrar");
+    document.querySelector("header").classList.add("mostrar");
+
 });
+
+
